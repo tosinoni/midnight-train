@@ -1,6 +1,8 @@
 package main;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang.math.NumberUtils;
 
@@ -17,7 +19,7 @@ public class MidnightTrainDemo {
 		int number = -1;
 
 		while (number < 1) {
-			String input = JOptionPane.showInputDialog(frame,message);
+			String input = JOptionPane.showInputDialog(frame, message);
 
 			if (NumberUtils.isDigits(input)) {
 				int num = Integer.parseInt(input);
@@ -29,21 +31,23 @@ public class MidnightTrainDemo {
 		return number;
 	}
 
-	public static int[] getTimesRequiredForMove(JFrame frame, int num) {
-		
-		int[] times = new int[num];
-		
-		for (int i=0; i<num; i++) {
-			String message = "Please enter the time for person " + (i+1);
-			int input;
-			do {
-				input = getValidNumberInput(frame, message);
-			}while(Arrays.asList(times).contains(input));
+	public static List<Integer> getTimesRequiredForMove(JFrame frame, int num) {
+
+		List<Integer> timesList = new ArrayList<>();
+		while (timesList.size() != num) {
+			timesList.clear();
+			String message = "Please enter " + num + " numbers for the times separating them with comma";
 			
-			times[i] = input;
+			String input = JOptionPane.showInputDialog(frame,message);
+			String[] times = input.replaceAll("^[,\\s]+", "").split("[,\\s]+");
+
+			for (int i = 0; i < times.length; i++) {
+				if (NumberUtils.isDigits(times[i])) {
+					timesList.add(Integer.parseInt(times[i]));
+				}
+			}
 		}
-		
-		return times;
+		return timesList;
 	}
 
 	public static void main(String[] args) {
@@ -56,8 +60,8 @@ public class MidnightTrainDemo {
 
 		String message = "How many people do you want to move across the bridge?";
 		int numOfPeople = getValidNumberInput(frame, message);
-		int[] times = getTimesRequiredForMove(frame, numOfPeople);
-		
+		List<Integer> times = getTimesRequiredForMove(frame, numOfPeople);
+
 		// initialize the mvc
 		MidnightTrain model = new MidnightTrain();
 
@@ -65,7 +69,7 @@ public class MidnightTrainDemo {
 		MidnightTrainView view = new MidnightTrainView();
 		MidnightTrainController controller = new MidnightTrainController(model,
 				view);
-		
+
 	}
 
 }
