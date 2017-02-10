@@ -38,15 +38,27 @@ public class ProductionSystem {
 		if (node != null) {
 			State currentState = node.getState();
 
-			List<String> newTimes = getNewTimes(currentState.getTimeForPeopleOnTheLeft(),
-					currentState.getTimeForPeopleOnTheRight(), move);
-			State newState = new State(newTimes.get(0).trim(), newTimes.get(1).trim(), !currentState.isTorchLocation());
+			List<String> moveTimes = getMoveAsSTring(move);
 
-			if (currentState.isTorchLocation()) {
-				newTimes = getNewTimes(currentState.getTimeForPeopleOnTheRight(),
-						currentState.getTimeForPeopleOnTheLeft(), move);
-				newState = new State(newTimes.get(1).trim(), newTimes.get(0).trim(), !currentState.isTorchLocation());
+			List<String> leftList = currentState.convertToListOfString(currentState.getTimeForPeopleOnTheLeft());
+			List<String> rightList = currentState.convertToListOfString(currentState.getTimeForPeopleOnTheRight());
+
+			if (!currentState.isTorchLocation()) {
+				leftList.remove(moveTimes.get(0));
+				rightList.add(moveTimes.get(0));
+			} else {
+				rightList.remove(moveTimes.get(0));
+				leftList.add(moveTimes.get(0));
 			}
+			
+			if (moveTimes.size() > 1 && !currentState.isTorchLocation()) {
+				leftList.remove(moveTimes.get(1));
+				rightList.add(moveTimes.get(1));
+			} else if (moveTimes.size() > 1) {
+				rightList.remove(moveTimes.get(1));
+				leftList.add(moveTimes.get(1));
+			}
+			State newState = new State(getNewTimes(leftList).trim(), getNewTimes(rightList).trim(), !currentState.isTorchLocation());
 
 
 			newNode = new Node(newState);
@@ -57,17 +69,13 @@ public class ProductionSystem {
 		return newNode;
 	}
 
-	public List<String> getNewTimes(String leftTime, String rightTime, String move) {
-		List<String> moveTimes = getMoveAsSTring(move);
-		String newLeftTime = leftTime.replace(moveTimes.get(0), "");
+	public String getNewTimes(List<String> times) {
+		String s = "";
+		for (String time : times) {
+			s += time + " ";
+		}
 		
-		if (moveTimes.size() > 1) {
-			newLeftTime = newLeftTime.replace(moveTimes.get(1), "");
-		} 
-		
-		String newRightTime = rightTime + " " + move;
-
-		return Arrays.asList(newLeftTime, newRightTime);
+		return s;
 	}
 
 	public boolean canMove(String state, String move) {
@@ -103,7 +111,7 @@ public class ProductionSystem {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		List<Integer> times = new ArrayList<>(Arrays.asList(1, 2, 5, 8));
+		List<Integer> times = new ArrayList<>(Arrays.asList(1, 2, 3, 5, 8, 13));
 
 		ProductionSystem prod = new ProductionSystem(times);
 
@@ -111,7 +119,7 @@ public class ProductionSystem {
 		// System.out.println(move);
 		// }
 
-		State state = new State("2 5 8", "1", true);
+		State state = new State("1 2 3 5 8 13", "");
 		Node node = new Node(state);
 		for (Node n : prod.expand(node)) {
 			System.out.println(n.getState());

@@ -1,7 +1,10 @@
 package src.main;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Scanner;
 
 public class State {
 
@@ -47,7 +50,39 @@ public class State {
 	public void setTorchLocation(boolean torchLocation) {
 		this.torchLocation = torchLocation;
 	}
+	
+	private List<Integer> convertStringToList (String s) {
+		List<Integer> list = new ArrayList<Integer>();
+		Scanner scanner = new Scanner(s);
 
+		while (scanner.hasNextInt()) {
+		    list.add(scanner.nextInt());
+		}
+		
+		scanner.close();
+		return list;
+	}
+	
+	public List<String> convertToListOfString (String s) {
+		List<String> list = new ArrayList<>();
+		Scanner scanner = new Scanner(s);
+
+		while (scanner.hasNextInt()) {
+		    list.add(scanner.next());
+		}
+		
+		scanner.close();
+		return list;
+	}
+
+	
+	public List<Integer> getListOfTimeOnLeft () {
+		return convertStringToList(timeForPeopleOnTheLeft);
+	}
+	
+	public List<Integer> getListOfTimeOnRight () {
+		return convertStringToList(timeForPeopleOnTheRight);
+	}
 	public String reArrangeTime(String s) {
 		String[] numbers = s.trim().split("\\D+");
 		Arrays.sort(numbers, new Comparator<String>() {

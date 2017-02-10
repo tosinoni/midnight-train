@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang.math.NumberUtils;
-
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -21,7 +19,7 @@ public class MidnightTrainDemo {
 		while (number < 1) {
 			String input = JOptionPane.showInputDialog(frame, message);
 
-			if (NumberUtils.isDigits(input)) {
+			if (isNumeric(input)) {
 				int num = Integer.parseInt(input);
 				if (num > 0) {
 					number = num;
@@ -31,6 +29,9 @@ public class MidnightTrainDemo {
 		return number;
 	}
 
+	private static boolean isNumeric(String s) {  
+	    return s.matches("[-+]?\\d*\\.?\\d+");  
+	}  
 	public static List<Integer> getTimesRequiredForMove(JFrame frame, int num) {
 
 		List<Integer> timesList = new ArrayList<>();
@@ -42,7 +43,7 @@ public class MidnightTrainDemo {
 			String[] times = input.replaceAll("^[,\\s]+", "").split("[,\\s]+");
 
 			for (int i = 0; i < times.length; i++) {
-				if (NumberUtils.isDigits(times[i])) {
+				if (isNumeric(times[i])) {
 					timesList.add(Integer.parseInt(times[i]));
 				}
 			}
