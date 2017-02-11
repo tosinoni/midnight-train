@@ -2,9 +2,12 @@ package src.main.searches;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import src.main.Node;
 import src.main.ProductionSystem;
@@ -14,8 +17,8 @@ import src.main.Strategy;
 public class BreadthFirstSearch implements Strategy {
 
 	private ProductionSystem prodSystem;
-	private Queue<Node> nodeList = new LinkedList<>();
-	private List<State> visitedStates = new ArrayList<>();
+	private Queue<Node> nodeList = new ConcurrentLinkedQueue<>();
+	private Set<State> visitedStates = new LinkedHashSet<>();
 
 	@Override
 	public Node search(List<Integer> times) {
@@ -43,10 +46,11 @@ public class BreadthFirstSearch implements Strategy {
 	public Node treeSearch(State goalState) {
 
 		while (!nodeList.isEmpty()) {
-			Node node = nodeList.remove();
+			Node node = nodeList.poll();
 
 			if (!visitedStates.contains(node.getState())) {
 				visitedStates.add(node.getState());
+				
 				if (node.getState().equals(goalState))
 					return node;
 
@@ -58,7 +62,7 @@ public class BreadthFirstSearch implements Strategy {
 	}
     
 	public static void main(String[] args) {
-		List<Integer> times = new ArrayList<>(Arrays.asList(1, 2, 5, 8));
+		List<Integer> times = new ArrayList<>(Arrays.asList(1, 2, 3, 5, 8, 13));
 
 		BreadthFirstSearch breathFirstSearch = new BreadthFirstSearch();
 

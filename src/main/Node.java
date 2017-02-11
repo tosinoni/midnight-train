@@ -8,7 +8,7 @@ public class Node {
 
 	private int exactCost;
 	private State state;
-
+	private String move;
 	private Node parent;
 
 	private String action;
@@ -16,6 +16,7 @@ public class Node {
 	public Node(State state) {
 		this.state = state;
 		this.action = "";
+		this.move = "";
 	}
 
 	public State getState() {
@@ -32,6 +33,15 @@ public class Node {
 
 	public void setParent(Node parent) {
 		this.parent = parent;
+	}
+	
+
+	public String getMove() {
+		return move;
+	}
+
+	public void setMove(String move) {
+		this.move = move;
 	}
 
 	public String getAction() {

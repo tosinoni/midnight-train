@@ -21,7 +21,8 @@ public class State {
 		this(timeForPerson1, timeForPerson2, false);
 	}
 
-	public State(String timeForPeopleOnTheLeft, String timeForPeopleOnTheRight, boolean torchLocation) {
+	public State(String timeForPeopleOnTheLeft, String timeForPeopleOnTheRight,
+			boolean torchLocation) {
 		this.timeForPeopleOnTheLeft = timeForPeopleOnTheLeft;
 		this.timeForPeopleOnTheRight = timeForPeopleOnTheRight;
 		this.torchLocation = torchLocation;
@@ -50,39 +51,50 @@ public class State {
 	public void setTorchLocation(boolean torchLocation) {
 		this.torchLocation = torchLocation;
 	}
-	
-	private List<Integer> convertStringToList (String s) {
+
+	private List<Integer> convertStringToList(String s) {
 		List<Integer> list = new ArrayList<Integer>();
 		Scanner scanner = new Scanner(s);
 
 		while (scanner.hasNextInt()) {
-		    list.add(scanner.nextInt());
+			list.add(scanner.nextInt());
 		}
-		
+
 		scanner.close();
 		return list;
 	}
-	
-	public List<String> convertToListOfString (String s) {
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + timeForPeopleOnTheLeft.hashCode();
+		result = prime * result + timeForPeopleOnTheRight.hashCode();
+		result = prime * result + Boolean.hashCode(torchLocation);
+
+		return result;
+	}
+
+	public List<String> convertToListOfString(String s) {
 		List<String> list = new ArrayList<>();
 		Scanner scanner = new Scanner(s);
 
 		while (scanner.hasNextInt()) {
-		    list.add(scanner.next());
+			list.add(scanner.next());
 		}
-		
+
 		scanner.close();
 		return list;
 	}
 
-	
-	public List<Integer> getListOfTimeOnLeft () {
+	public List<Integer> getListOfTimeOnLeft() {
 		return convertStringToList(timeForPeopleOnTheLeft);
 	}
-	
-	public List<Integer> getListOfTimeOnRight () {
+
+	public List<Integer> getListOfTimeOnRight() {
 		return convertStringToList(timeForPeopleOnTheRight);
 	}
+
 	public String reArrangeTime(String s) {
 		String[] numbers = s.trim().split("\\D+");
 		Arrays.sort(numbers, new Comparator<String>() {
@@ -90,11 +102,12 @@ public class State {
 				return Integer.valueOf(s1).compareTo(Integer.valueOf(s2));
 			}
 		});
-		
+
 		String returnString = "";
-		for (int i=0; i<numbers.length; i++) returnString += numbers[i] + " ";
-		
-		return  returnString.trim();
+		for (int i = 0; i < numbers.length; i++)
+			returnString += numbers[i] + " ";
+
+		return returnString.trim();
 	}
 
 	public boolean equals(Object obj) {
@@ -106,8 +119,10 @@ public class State {
 
 		State state = (State) obj;
 
-		return (this.getTimeForPeopleOnTheLeft().equals(state.getTimeForPeopleOnTheLeft()))
-				&& (this.getTimeForPeopleOnTheRight().equals(state.getTimeForPeopleOnTheRight()))
+		return (this.getTimeForPeopleOnTheLeft().equals(state
+				.getTimeForPeopleOnTheLeft()))
+				&& (this.getTimeForPeopleOnTheRight().equals(state
+						.getTimeForPeopleOnTheRight()))
 				&& (this.torchLocation == state.torchLocation);
 	}
 
@@ -116,7 +131,8 @@ public class State {
 
 		if (torchLocation)
 			location = "R";
-		return getTimeForPeopleOnTheLeft() + "|" + getTimeForPeopleOnTheRight() + "|" + location;
+		return getTimeForPeopleOnTheLeft() + "|" + getTimeForPeopleOnTheRight()
+				+ "|" + location;
 	}
 
 }

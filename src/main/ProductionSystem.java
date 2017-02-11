@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 
 public class ProductionSystem {
@@ -63,7 +64,8 @@ public class ProductionSystem {
 
 			newNode = new Node(newState);
 			newNode.setParent(node);
-			newNode.setAction(node.getAction() + " $" + move);
+			newNode.setMove(node.getMove() + "-" + move);
+			newNode.setAction(node.getAction() + "-" + newState.toString());
 
 		}
 		return newNode;
@@ -80,11 +82,24 @@ public class ProductionSystem {
 
 	public boolean canMove(String state, String move) {
 		List<String> moveTimes = getMoveAsSTring(move);
-      
+       Set<String> states = convertStringToList(state);
+       
 		if (moveTimes.size() < 2) {
-			return state.contains(moveTimes.get(0));
+			return states.contains(moveTimes.get(0));
 		}
-		return state.contains(moveTimes.get(0)) && state.contains(moveTimes.get(1));
+		return states.contains(moveTimes.get(0)) && states.contains(moveTimes.get(1));
+	}
+	
+	private Set<String> convertStringToList (String s) {
+		Set<String> list = new LinkedHashSet<>();
+		Scanner scanner = new Scanner(s);
+
+		while (scanner.hasNextInt()) {
+		    list.add(scanner.next());
+		}
+		
+		scanner.close();
+		return list;
 	}
 
 	public List<String> getMoveAsSTring(String time) {
