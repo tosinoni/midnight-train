@@ -2,7 +2,9 @@ package src.main.searches;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import src.main.Node;
@@ -12,7 +14,7 @@ import src.main.Strategy;
 
 public class DepthFirstSearch implements Strategy{
     private Stack<Node> nodeList = new Stack<>();
-	private List<State> visitedStates = new ArrayList<>();
+	private Map<String, Node> visitedStates = new LinkedHashMap<>();
 	private ProductionSystem prodSystem;
 
 	
@@ -41,12 +43,12 @@ public class DepthFirstSearch implements Strategy{
 		while (!nodeList.isEmpty()) {
 			Node node = nodeList.pop();
 
-			if (!visitedStates.contains(node.getState())) {
-				visitedStates.add(node.getState());
+			if (visitedStates.get(node.getState().toString()) == null) {
+				visitedStates.put(node.getState().toString(), node);
 				if (node.getState().equals(goalState))
 					return node;
 				
-				for (Node n : prodSystem.expand(node)) nodeList.push(n);
+				for (Node n : prodSystem.expand(node, visitedStates)) nodeList.push(n);
 				
 			}
 

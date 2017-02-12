@@ -2,9 +2,11 @@ package src.main.searches;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -18,7 +20,8 @@ public class BreadthFirstSearch implements Strategy {
 
 	private ProductionSystem prodSystem;
 	private Queue<Node> nodeList = new ConcurrentLinkedQueue<>();
-	private Set<State> visitedStates = new LinkedHashSet<>();
+	private Map<String, Node> visitedStates = new LinkedHashMap<>();
+
 
 	@Override
 	public Node search(List<Integer> times) {
@@ -48,13 +51,13 @@ public class BreadthFirstSearch implements Strategy {
 		while (!nodeList.isEmpty()) {
 			Node node = nodeList.poll();
 
-			if (!visitedStates.contains(node.getState())) {
-				visitedStates.add(node.getState());
-				
+			if (visitedStates.get(node.getState().toString()) == null) {
+				visitedStates.put(node.getState().toString(), node);
+
 				if (node.getState().equals(goalState))
 					return node;
 
-				nodeList.addAll(prodSystem.expand(node));
+				nodeList.addAll(prodSystem.expand(node, visitedStates));
 			}
 
 		}

@@ -2,8 +2,11 @@ package src.main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -15,7 +18,7 @@ public class ProductionSystem {
 		setPossibleMoves(times);
 	}
 
-	public Set<Node> expand(Node node) {
+	public Set<Node> expand(Node node, Map<String, Node> visitedStates) {
 		Set<Node> nodes = new LinkedHashSet<>();
 
 		State state = node.getState();
@@ -27,13 +30,15 @@ public class ProductionSystem {
 
 		for (String move : possibleMoves) {
 			if (canMove(timeForPeople, move)) {
-				nodes.add(createNode(node, move));
+				nodes.add(createNode(node, move, visitedStates));
 			}
 		}
+		nodes.removeAll(Collections.singleton(null));
+
 		return nodes;
 	}
 
-	public Node createNode(Node node, String move) {
+	public Node createNode(Node node, String move, Map<String, Node> visitedStates) {
 		Node newNode = null;
 
 		if (node != null) {
@@ -51,7 +56,7 @@ public class ProductionSystem {
 				rightList.remove(moveTimes.get(0));
 				leftList.add(moveTimes.get(0));
 			}
-			
+
 			if (moveTimes.size() > 1 && !currentState.isTorchLocation()) {
 				leftList.remove(moveTimes.get(1));
 				rightList.add(moveTimes.get(1));
@@ -59,13 +64,14 @@ public class ProductionSystem {
 				rightList.remove(moveTimes.get(1));
 				leftList.add(moveTimes.get(1));
 			}
-			State newState = new State(getNewTimes(leftList).trim(), getNewTimes(rightList).trim(), !currentState.isTorchLocation());
-
-
-			newNode = new Node(newState);
-			newNode.setParent(node);
-			newNode.setMove(node.getMove() + "-" + move);
-			newNode.setAction(node.getAction() + "-" + newState.toString());
+			State newState = new State(getNewTimes(leftList).trim(), getNewTimes(rightList).trim(),
+					!currentState.isTorchLocation());
+			if (visitedStates.get(newState.toString()) == null) {
+				newNode = new Node(newState);
+				newNode.setParent(node);
+				newNode.setMove(node.getMove() + "-" + move);
+				newNode.setAction(node.getAction() + "-" + newState.toString());
+			}
 
 		}
 		return newNode;
@@ -76,28 +82,28 @@ public class ProductionSystem {
 		for (String time : times) {
 			s += time + " ";
 		}
-		
+
 		return s;
 	}
 
 	public boolean canMove(String state, String move) {
 		List<String> moveTimes = getMoveAsSTring(move);
-       Set<String> states = convertStringToList(state);
-       
+		Set<String> states = convertStringToList(state);
+
 		if (moveTimes.size() < 2) {
 			return states.contains(moveTimes.get(0));
 		}
 		return states.contains(moveTimes.get(0)) && states.contains(moveTimes.get(1));
 	}
-	
-	private Set<String> convertStringToList (String s) {
+
+	private Set<String> convertStringToList(String s) {
 		Set<String> list = new LinkedHashSet<>();
 		Scanner scanner = new Scanner(s);
 
 		while (scanner.hasNextInt()) {
-		    list.add(scanner.next());
+			list.add(scanner.next());
 		}
-		
+
 		scanner.close();
 		return list;
 	}
@@ -105,7 +111,6 @@ public class ProductionSystem {
 	public List<String> getMoveAsSTring(String time) {
 		return Arrays.asList(time.replaceAll("[^-?0-9]+", " ").trim().split(" "));
 	}
-
 
 	public void setPossibleMoves(List<Integer> times) {
 		if (times != null) {
@@ -136,7 +141,7 @@ public class ProductionSystem {
 
 		State state = new State("1 2 3 5 8 13", "");
 		Node node = new Node(state);
-		for (Node n : prod.expand(node)) {
+		for (Node n : prod.expand(node, new HashMap<>())) {
 			System.out.println(n.getState());
 			System.out.println(n.getAction());
 

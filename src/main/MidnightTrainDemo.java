@@ -67,7 +67,6 @@ public class MidnightTrainDemo {
 		}
 
 		if (node != null && node.getAction() != null) {
-			System.out.println(node.getAction());
 			String[] parts = node.getAction().trim().split("\\-");
 			String[] moves = node.getMove().trim().split("\\-");
 

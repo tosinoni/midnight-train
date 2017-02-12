@@ -75,7 +75,7 @@ public class AstarSearch implements Strategy {
 			if (node.getState().equals(goalState))
 				return node;
 			//node.getState().print();
-			Set<Node> successors = prodSystem.expand(node);
+			Set<Node> successors = prodSystem.expand(node, closed);
 			open.remove(node.getState().toString());
 			closed.put(node.getState().toString(), node);
 
