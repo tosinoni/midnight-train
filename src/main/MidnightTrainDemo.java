@@ -105,8 +105,8 @@ public class MidnightTrainDemo {
 
 	public static Node printHeuristicSearchOptions(Scanner sc,
 			List<Integer> times) {
-		System.out.println("1. Heuristic By Sum Of People On Right Side");
-		System.out.println("2. Heuristic By Sum Of people On the Left Side");
+		System.out.println("1. Heuristic By Distance To Goal On Right Side");
+		System.out.println("2. Heuristic By Distance To Goal On the Left Side");
 		System.out.println("3. Heuristic By Average");
 
 		System.out
